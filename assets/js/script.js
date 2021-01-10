@@ -96,27 +96,28 @@ $(".list-group").on("click", "span", function() {
   dataInput.trigger("focus");
 });
 
-$(".list-group").on("blur", "input", function() {
-  let taskStatus = $(this)
+$(".list-group").on("blur", "input[type='text']", function() {
+  let status = $(this)
     .closest(".list-group")
     .attr("id")
     .replace("list-", "");
 
   let date = $(this)
-    .val();
+    .val()
+    .trim();
 
   let index = $(this)
     .closest(".list-group-item")
     .index();
 
-  tasks[taskStatus][index].date = date;
+  tasks[status][index].date = date;
   saveTasks();
 
-  let dateSpan = $("<span>")
+  let taskSpan = $("<span>")
     .addClass("badge badge-primary badge-pill")
     .text(date);
 
-  $(this).replaceWith(dateSpan);
+  $(this).replaceWith(taskSpan);
 });
 
 
