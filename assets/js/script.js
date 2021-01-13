@@ -13,6 +13,7 @@ let createTask = function(taskText, taskDate, taskList) {
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
+  auditTask(taskLi);
 
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
@@ -93,10 +94,18 @@ $(".list-group").on("click", "span", function() {
     .val(date);
 
   $(this).replaceWith(dataInput);
+
+  dataInput.datepicker({
+    minDate: 0,
+    onClose: function() {
+      $(this).trigger("change");
+    }
+  });
+
   dataInput.trigger("focus");
 });
 
-$(".list-group").on("blur", "input[type='text']", function() {
+$(".list-group").on("change", "input[type='text']", function() {
   let status = $(this)
     .closest(".list-group")
     .attr("id")
@@ -118,6 +127,11 @@ $(".list-group").on("blur", "input[type='text']", function() {
     .text(date);
 
   $(this).replaceWith(taskSpan);
+
+  console.log($(taskSpan));
+  console.log($(taskSpan).closest(".list-group-item"));
+
+  auditTask($(taskSpan).closest(".list-group-item"));
 });
 
 
@@ -228,5 +242,27 @@ $("#trash").droppable({
   out: function(event, ui) {
     console.log("out");
   }
-})
+});
 
+$("#modalDueDate").datepicker({
+  minDate: 0
+});
+
+function auditTask(taskEl) {
+  let date = $(taskEl)
+    .find("span")
+    .text()
+    .trim();
+
+  let time = moment(date, "L").set("hour", 17);
+
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+
+  if (moment().isAfter(time)) {
+    $(taskEl).addClass("list-group-item-danger");
+  } 
+  else if ( Math.abs(moment().diff(time, "days")) <= 2 ) {
+    $(taskEl).addClass("list-group-item-warning");
+  };
+
+};
