@@ -148,7 +148,7 @@ $("#task-form-modal").on("shown.bs.modal",  function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click( function() {
+$("#task-form-modal .btn-save").click( function() {
   // get form values
   let taskText = $("#modalTaskDescription").val();
   let taskDate = $("#modalDueDate").val();
